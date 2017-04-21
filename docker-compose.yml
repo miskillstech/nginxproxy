@@ -4,6 +4,7 @@ services:
     build: .
     volumes:
        - /ms/nginxproxy/var-www-html:/var/www/html
+       - /ms/ta-prog-repos/:/ms/ta-prog-repos/
        - /ms/nginxproxy/:/ms/nginxproxy/
        - /ms/nginxproxy/var-log-nginx/:/var/log/nginx/
        - /ms/nginxproxy/etc-supervisor-conf.d-services.conf:/etc/supervisor/conf.d/services.conf
