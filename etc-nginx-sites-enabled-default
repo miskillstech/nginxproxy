@@ -1,0 +1,75 @@
+server {
+	listen 80;
+	server_name miskillstech.com;
+        rewrite ^(.*) http://www.miskillstech.com$1 permanent;
+}
+server {
+        listen 80 default_server;
+        server_name www.miskillstech.com;
+        root /ms/miskillstech.com/code/runenvs/website/;
+        index index.php index.html index.htm;
+        client_max_body_size 1000M;
+        include /dev/shm/nginx.*.conf;
+		
+		location ~* \.(ico|css|js|gif|jpe?g|png)(\?[0-9]+)?$ {
+                expires max;
+                log_not_found off;
+        }
+		
+        location / {
+			# Check if a file or directory index file exists, else route it to index.php.
+			try_files $uri $uri/ /index.php?$query_string;
+			location = /patient-portal/index.php {
+
+                fastcgi_pass   ms_php7docker_1:84;
+                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+            }
+        }
+		error_page 404 /404.html;
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+              root /usr/share/nginx/www;
+        }
+
+        # pass the PHP scripts to FastCGI server listening on the php-fpm socket
+        location ~* \.php$ {
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                try_files $uri =404;
+                fastcgi_pass ms_php7docker_1:84;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_index index.php;
+                include fastcgi_params;
+        }
+}
+server {
+        listen 80;
+        server_name takeappo.com;
+        rewrite ^(.*) http://www.takeappo.com$1 permanent;
+}
+server {
+        listen 80;
+        server_name www.takeappo.com;
+        root /ms/ta-prog-repos/ta-wa-pt-frontend/scripts/;
+        index index.php index.html index.htm;
+        client_max_body_size 1000M;
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+}
+server {
+        listen 80;
+        server_name whizion.com;
+        rewrite ^(.*) http://www.whizion.com$1 permanent;
+}
+server {
+        listen 80;
+        server_name www.whizion.com;
+        root /ms/miskillstech.com/code/runenvs/whizion.com/;
+        index index.php index.html index.htm;
+        client_max_body_size 1000M;
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+}

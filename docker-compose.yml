@@ -1,0 +1,24 @@
+version: '2'
+services:
+  server:
+    build: .
+    volumes:
+       - /ms/nginxproxy/var-www-html:/var/www/html
+       - /ms/nginxproxy/:/ms/nginxproxy/
+       - /ms/nginxproxy/var-log-nginx/:/var/log/nginx/
+       - /ms/nginxproxy/etc-supervisor-conf.d-services.conf:/etc/supervisor/conf.d/services.conf
+       - /ms/nginxproxy/etc-nginx-sites-enabled-default:/etc/nginx/sites-enabled/default
+       - /ms/nginxproxy/etc-nginx-snippets-fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
+    ports:
+       - 80:80
+       - 443:443
+       - 5000:5000
+       - 3000:3000
+    networks:
+       - ms
+    restart: unless-stopped
+
+networks:
+  emr:
+    external:
+      name: ms_default
