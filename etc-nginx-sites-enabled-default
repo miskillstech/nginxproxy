@@ -6,7 +6,7 @@ server {
 server {
         listen 80;
         server_name www.takeappo.com;
-        root /ms/ta-prog-repos/ta-wa-pt-frontend/script/app/;
+        root /ms/ta-prog-repos/ta-wa-pt-frontend/scripts/app/;
         index index.php index.html index.htm;
         client_max_body_size 1000M;
         location / {
