@@ -1,15 +1,28 @@
 server {
         listen 80;
-        server_name takeappo.com;
-        rewrite ^(.*) http://www.takeappo.com$1 permanent;
-}
-server {
-        listen 80;
-        server_name www.takeappo.com;
-        root /ms/ta-prog-repos/ta-wa-pt-frontend/scripts/app/;
-        index index.php index.html index.htm;
-        client_max_body_size 1000M;
-        location / {
-                try_files $uri $uri/ /index.php?$query_string;
+        server_name _;
+		# Requirement 1: Disable the access logs and error logs to make it work faster. The access log and error log is turned on only during debugging
+		access_log  off;
+		error_log off;	
+		
+		# Requirement 2: Enable large file uplaods
+		# ref: http://cnedelcu.blogspot.com/2013/09/nginx-error-413-request-entity-too-large.html
+		client_max_body_size 1000M;
+		
+		# Requirement 3: Enable compression
+        gzip on;
+        gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript image/png;
+
+		# Requirement 4: Ref: https://t37.net/nginx-optimization-understanding-sendfile-tcp_nodelay-and-tcp_nopush.html
+		sendfile           on;
+		tcp_nodelay        on;
+		tcp_nopush         on;
+
+		# Requirement 5: redirect to  www
+		if ($host = "miskillstech.com")
+        {
+                return 301 http://www.miskillstech.com$request_uri;
         }
+		# Requirement 9: Include all the locations that this will proxy for
+		include /prog-repos/v1-sd-nginxproxy/locations/*.conf;
 }

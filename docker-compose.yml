@@ -3,23 +3,20 @@ services:
   server:
     build: .
     volumes:
-       - /ms/nginxproxy/var-www-html:/var/www/html
-       - /ms/ta-prog-repos/:/ms/ta-prog-repos/
-       - /ms/nginxproxy/:/ms/nginxproxy/
-       - /ms/nginxproxy/var-log-nginx/:/var/log/nginx/
-       - /ms/nginxproxy/etc-supervisor-conf.d-services.conf:/etc/supervisor/conf.d/services.conf
-       - /ms/nginxproxy/etc-nginx-sites-enabled-default:/etc/nginx/sites-enabled/default
-       - /ms/nginxproxy/etc-nginx-snippets-fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
+       - /prog-repos/v1-sd-nginxproxy/var-www-html:/var/www/html
+       - /prog-repos/v1-sd-nginxproxy/:/prog-repos/v1-sd-nginxproxy/
+       - /prog-repos/v1-sd-nginxproxy/var-log-nginx/:/var/log/nginx/
+       - /prog-repos/v1-sd-nginxproxy/etc-supervisor-conf.d-services.conf:/etc/supervisor/conf.d/services.conf
+       - /prog-repos/v1-sd-nginxproxy/etc-supervisor-supervisord.conf:/etc/supervisor/supervisord.conf            # this is to disable logging during production
+       - /prog-repos/v1-sd-nginxproxy/etc-nginx-sites-enabled-default:/etc/nginx/sites-enabled/default
+       - /prog-repos/v1-sd-nginxproxy/etc-nginx-snippets-fastcgi-php.conf:/etc/nginx/snippets/fastcgi-php.conf
     ports:
        - 80:80
-       - 443:443
-       - 5000:5000
-       - 3000:3000
     networks:
-       - emr
+       - agni
     restart: unless-stopped
 
 networks:
   emr:
     external:
-      name: emr_default
+      name: agni_default
